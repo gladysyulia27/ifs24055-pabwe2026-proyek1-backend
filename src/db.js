@@ -28,8 +28,10 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const here = path.dirname(fileURLToPath(import.meta.url));
-const dataDir = path.resolve(here, '../data');
-fs.mkdirSync(dataDir, { recursive: true });
+// Di lingkungan Vercel serverless, hanya direktori /tmp yang memiliki izin tulis (writable)
+const isVercel = Boolean(process.env.VERCEL);
+const dataDir = isVercel ? '/tmp' : path.resolve(here, '../data');
+try { fs.mkdirSync(dataDir, { recursive: true }); } catch {}
 const db = new Database(path.join(dataDir, 'inventory.db'));
 db.pragma('journal_mode = WAL');
 db.pragma('foreign_keys = ON');
@@ -255,3 +257,4 @@ for (const admin of departmentAdmins) {
 }
 
 export default db;
+
