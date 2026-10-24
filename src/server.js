@@ -35,7 +35,7 @@ const PORT = process.env.PORT || 4000;
 const allowedOrigins = (process.env.FRONTEND_ORIGIN || 'http://localhost:3000,http://127.0.0.1:3000')
   .split(',')
   .map((o) => o.trim());
-app.use(cors({ origin: allowedOrigins }));
+app.use(cors({ origin: true, credentials: true }));
 app.use(express.json({ limit: '10mb' }));
 app.use(authMiddleware);
 
